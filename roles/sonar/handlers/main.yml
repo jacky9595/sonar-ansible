@@ -1,0 +1,6 @@
+---
+- name: restart sonar
+  command: "sh /usr/local/sonar/bin/linux-x86-64/sonar.sh restart"
+
+- name: wait for sonar
+  wait_for: port=9000 delay=3 timeout=300

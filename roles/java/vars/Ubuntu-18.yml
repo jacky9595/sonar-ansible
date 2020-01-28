@@ -1,0 +1,12 @@
+---
+# JDK version options include:
+#   - java
+#   - openjdk-11-jdk
+__java_packages:
+  - openjdk-11-jdk
+
+ansible_distribution: Ubuntu
+ansible_distribution_version: 18.04
+ansible_os_family: Ubuntu
+
+

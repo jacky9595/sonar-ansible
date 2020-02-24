@@ -1,12 +1,12 @@
 ---
 - name: create deployment user
-  user: 
+  user:
       name: sonar
       password: "{{ user_pass_hash }}"
       shell: /bin/bash
-      createhome: yes 
+      createhome: yes
       state: present
-  
+
 - name: Create a database for Sonar.
   become: true
   become_user: postgres
@@ -14,7 +14,7 @@
     name: "{{ sonar_postgresql_database }}"
     state: present
 
-- name: Create a sonar user.
+- name: Create a sonar user postgresql.
   become: true
   become_user: postgres
   postgresql_user:
@@ -74,14 +74,14 @@
   when: "ansible_service_mgr != 'systemd'"
 
 #  The new version of sonar conatins elasticsearch that use a rules that not user root
-#- name: Copy SonarQube systemd unit file into place (for systemd systems).
-#  template:
-#    src: sonar.unit.j2
-#    dest: /etc/systemd/system/sonar.service
-#    owner: "{{ sonar_postgresql_username }}"
-#    group: "{{ sonar_postgresql_username }}"
-#    mode: 0755
-#  when: "ansible_service_mgr == 'systemd'"
+- name: Copy SonarQube systemd unit file into place (for systemd systems).
+  template:
+    src: sonar.unit.j2
+    dest: /etc/systemd/system/sonar.service
+    owner: "{{ sonar_postgresql_username }}"
+    group: "{{ sonar_postgresql_username }}"
+    mode: 0755
+  when: "ansible_service_mgr == 'systemd'"
 
 - name: User sonar chown to folder install
   file:
@@ -92,11 +92,11 @@
     state: directory
     recurse: yes
 
-#- name: Ensure Sonar is running and set to start on boot.
-#  service: name=sonar state=started enabled=yes
-
 - name: Ensure Sonar is running and set to start on boot.
-  command: "sh /usr/local/sonar/bin/linux-x86-64/sonar.sh restart"
+  service: name=sonar state=started enabled=yes
+
+#- name: Ensure Sonar is running and set to start on boot.
+#  command: "sh /usr/local/sonar/bin/linux-x86-64/sonar.sh restart"
 
 - name: Allow Sonar time to build on first start.
   pause: seconds=180

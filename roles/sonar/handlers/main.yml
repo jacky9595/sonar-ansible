@@ -1,6 +1,9 @@
 ---
+#- name: restart sonar
+#  command: "sh /usr/local/sonar/bin/linux-x86-64/sonar.sh restart"
 - name: restart sonar
-  command: "sh /usr/local/sonar/bin/linux-x86-64/sonar.sh restart"
+  service: name=sonar state=restarted
+  notify: wait for sonar
 
 - name: wait for sonar
   wait_for: port=9000 delay=3 timeout=300
